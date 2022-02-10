@@ -6,5 +6,6 @@
 
 int ChooseNext(FourInARow::Game *pGameBoard)
 {
+    return 0;
 }
 
