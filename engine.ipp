@@ -6,7 +6,9 @@
 
 #define _MINMAX_MIN 1
 #define _MINMAX_MAX 2
-#define _MINMAX_DEPTH 9
+#define _MINMAX_DEPTH 13
+
+#define ENGINE_ALPHBETA
 
 typedef struct _MoveAndResult
 {
@@ -25,7 +27,12 @@ int ChooseNext(FourInARow::Game *pGameBoard/*, int whichIsBot (1 or 2)*/)
 
     printf("thinking...\n");
 
+#ifdef ENGINE_MINMAX
     MoveAndResult move = _minmax(&game, _MINMAX_DEPTH, _MINMAX_MAX);
+#endif
+#ifdef ENGINE_ALPHBETA
+    MoveAndResult move = _minmaxAlphBeta(&game, _MINMAX_DEPTH, _MINMAX_MAX, -1, 3);
+#endif
 
     return move.move;
 }
@@ -129,6 +136,108 @@ RETURN:
 
 MoveAndResult _minmaxAlphBeta(FourInARow::Game* pGame, int depthToSearch, int minOrMax, int alpha, int beta)
 {
+#ifdef DEBUG
+    static int depth = 0;
+    depth++;
+    printf("%*cminmax called : \n"
+           "%*cdepthToSearch : %d\n"
+           "%*cminOrMax min1max2 : %d\n\n",
+           depth*4, ' ',
+           depth*4, ' ', depthToSearch,
+           depth*4, ' ', minOrMax);
+    pGame->Print();
+#endif
+
+    int current_game_status = pGame->GetGameStatus();
+
+    MoveAndResult best_move_and_result;
+    best_move_and_result.move  = -1;
+    best_move_and_result.score = minOrMax == _MINMAX_MIN ? 3 : -1;
+
+    int opposite_of_minOrMax = minOrMax == _MINMAX_MIN ? _MINMAX_MAX : _MINMAX_MIN;
+
+    int board_width = pGame->GetBoardWidth();
+
+
+    switch (current_game_status)
+    {
+        case 1:
+            best_move_and_result.score = 0;
+            goto RETURN;
+        case 2:
+            best_move_and_result.score = 2;
+            goto RETURN;
+        case 3:
+            best_move_and_result.score = 1;
+            goto RETURN;
+    }
+    if (depthToSearch == 0)
+    {
+        best_move_and_result.score = 1;
+        goto RETURN;
+    }
+
+
+    for (int move = 0; move < board_width; move++)
+    {
+        int result = pGame->PutCoin(move);
+
+#ifdef DEBUG
+        printf("if move = %d\n", move);
+        pGame->Print();
+#endif
+
+        if (result == 2) continue;
+        if (result == 1 || result == 3)
+        {
+            printf("this can't be heppen!\n");
+            break;
+        }
+
+        MoveAndResult best_next_choice = _minmaxAlphBeta(pGame, depthToSearch - 1, opposite_of_minOrMax, alpha, beta);
+        best_next_choice.move = move;
+
+        switch (minOrMax)
+        {
+            case _MINMAX_MIN:
+                if (best_next_choice.score < best_move_and_result.score)
+                {
+                    best_move_and_result.score = best_next_choice.score;
+                    best_move_and_result.move  = best_next_choice.move;
+                }
+                if (best_move_and_result.score < beta)
+                {
+                    beta = best_move_and_result.score;
+                }
+                break;
+            case _MINMAX_MAX:
+                if (best_next_choice.score > best_move_and_result.score)
+                {
+                    best_move_and_result.score = best_next_choice.score;
+                    best_move_and_result.move  = best_next_choice.move;
+                }
+                if (best_move_and_result.score > alpha)
+                {
+                    alpha = best_move_and_result.score;
+                }
+                break;
+        }
+        pGame->Undo();
+        if (alpha >= beta)
+        {
+            break;
+        }
+    }
+
+RETURN:
+#ifdef DEBUG
+    printf("%*cbest move : %d\n"
+           "%*cbest score : %d\n\n",
+           depth*4, ' ', best_move_and_result.move,
+           depth*4, ' ', best_move_and_result.score);
+    depth--;
+#endif
+    return best_move_and_result;
 }
 
 
