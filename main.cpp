@@ -50,7 +50,8 @@ int main()
         }
 
         // bot turn
-        int bot_result = game.PutCoin(ChooseNext(&game));
+        int next_move = ChooseNext(&game);
+        int bot_result = game.PutCoin(next_move);
         switch (bot_result)
         {
             case 0:
