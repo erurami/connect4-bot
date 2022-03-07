@@ -21,8 +21,8 @@ class Connect4Ai
 {
     public:
 
-        void SetThinkMethod(int method) {m_ThinkMethod = method;};
-        void SetThinkDepth(int depth) {m_ThinkDepth = depth;};
+        static void SetThinkMethod(int method) {m_ThinkMethod = method;};
+        static void SetThinkDepth(int depth) {m_ThinkDepth = depth;};
 
         Connect4Ai();
         Connect4Ai(const FourInARow::Game *pGameBoard);
