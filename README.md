@@ -1,4 +1,4 @@
-# connect4-minmax
+# connect4-bot
 minmax and minmax-alphabeta
 
 # How to use
