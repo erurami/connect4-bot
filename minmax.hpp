@@ -35,5 +35,3 @@ class MinmaxDecider
 
 #include "minmax.ipp"
 
-#undef DEBUG
-

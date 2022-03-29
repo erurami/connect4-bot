@@ -5,7 +5,7 @@
 
 #include "minmaxdef.hpp"
 
-#define DEBUG
+//#define DEBUG
 //#define DEBUG2
 
 class MinmaxABDecider
@@ -39,5 +39,6 @@ class MinmaxABDecider
 
 #include "minmaxAB.ipp"
 
-#undef DEBUG
+//#undef DEBUG
+//#undef DEBUG2
 
