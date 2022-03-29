@@ -4,8 +4,9 @@
 #define INCLUDE_4INAROW
 #include "game/minigames.hpp"
 
-#define ENGINE_ALPHABETA 1
-#define ENGINE_MINMAX    2
+#define ENGINE_ALPHABETA     1
+#define ENGINE_MINMAX        2
+#define ENGINE_ALPHABETAPLUS 3
 
 int ChooseNext(FourInARow::Game *pGameBoard);
 

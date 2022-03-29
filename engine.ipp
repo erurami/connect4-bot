@@ -7,9 +7,6 @@
 #include <time.h>
 #include <windows.h>
 
-#define _MINMAX_MIN 1
-#define _MINMAX_MAX 2
-
 
 int ChooseNext(FourInARow::Game *pGameBoard/*, int whichIsBot (1 or 2)*/)
 {
@@ -42,6 +39,7 @@ void _ShuffleArr(int* arr, int length)
 
 #include "minmax.hpp"
 #include "minmaxAB.hpp"
+#include "minmaxABPlus.hpp"
 
 
 
@@ -54,7 +52,7 @@ DWORD WINAPI _Run_Connect4Ai_ChooseNext(LPVOID lpParam)
 }
 
 
-int Connect4Ai::m_ThinkMethod = ENGINE_ALPHABETA;
+int Connect4Ai::m_ThinkMethod = ENGINE_ALPHABETAPLUS;
 int Connect4Ai::m_ThinkDepth  = 10;
 
 Connect4Ai::Connect4Ai()
@@ -119,6 +117,9 @@ void Connect4Ai::KillThinkingProcess(void)
         case ENGINE_ALPHABETA:
             ((MinmaxABDecider*)m_pDecider)->Kill();
             break;
+        case ENGINE_ALPHABETAPLUS:
+            ((MinmaxABDecider*)m_pDecider)->Kill();
+            break;
     }
 
     WaitForFinish();
@@ -161,6 +162,14 @@ void Connect4Ai::_ChooseNext(void)
             {
             m_pDecider = (void*)(new MinmaxABDecider);
             m_ThinkResult = ((MinmaxABDecider*)m_pDecider)->Decide(m_pGame, m_ThinkDepth);
+            delete m_pDecider;
+            m_pDecider = NULL;
+            break;
+            }
+        case ENGINE_ALPHABETAPLUS:
+            {
+            m_pDecider = (void*)(new MinmaxABPlusDecider);
+            m_ThinkResult = ((MinmaxABPlusDecider*)m_pDecider)->Decide(m_pGame, m_ThinkDepth);
             delete m_pDecider;
             m_pDecider = NULL;
             break;
