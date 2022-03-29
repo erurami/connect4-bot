@@ -48,26 +48,15 @@ class Connect4Ai
 
     private:
 
-        _MoveAndResult minmax(
-                FourInARow::Game* pGame,
-                int depth, int minOrMax);
-
-        _MoveAndResult minmaxAlphaBeta(
-                FourInARow::Game* pGame,
-                int depth, int minOrMax,
-                int alpha = -1,
-                int beta  = 3);
-
-
         // -3 : game not set
         // -2 : thinking not started
         // -1 : thinking
         //  0 : finished
         int m_ThinkingStepNow;
 
-        bool m_IsForcedToStop;
-
         FourInARow::Game* m_pGame;
+
+        void* m_pDecider;
 
         int m_ThinkResult;
 
@@ -75,6 +64,7 @@ class Connect4Ai
         static int m_ThinkDepth;
 
 };
+
 
 
 #include "engine.ipp"
