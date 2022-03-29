@@ -14,7 +14,7 @@ int MinmaxABDecider::Decide(
     m_depthToThink = depth;
     m_ExitCode = -1;
 
-    _MoveAndScore decision;
+    _MoveAndScore decision = {-1, 0};
 
     switch (pGame->GetWhichTurn())
     {
